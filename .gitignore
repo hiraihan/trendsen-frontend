@@ -1,0 +1,49 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Secrets and local state. `.env` configures the dev server and the E2E run locally;
+# `.env.example` is the tracked template and is deliberately re-included.
+.env
+.env.*
+!.env.example
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Test artifacts
+test-results
+playwright-report
+coverage
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Documentation tree — all of docs/ stays local (operator decision 2026-10-26).
+# Tickets and reference notes are project working notes, not shipped product.
+docs/
+
+# Throwaway manual debug harness (one-off playwright console/screenshot dump).
+pw_check.mjs
+
+# Agent configuration — dev-tool scaffolds that must never enter the repo.
+AGENTS.md
+agents.md
+CLAUDE.md
+.claude/
+.cursor/

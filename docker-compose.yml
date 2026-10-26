@@ -1,0 +1,23 @@
+# TrendSentinel SPA - standalone stack.
+#
+# The SPA is static files served to a browser: no database, no volume, no migration, and no
+# network dependency on the API container. The browser reaches the API over the host's
+# published port, so this stack runs independently of the backend repository's stack.
+#
+#   docker compose up -d --build          # SPA on http://localhost:5180
+#
+# The API must allow this origin in its CORS_ORIGINS, or every request fails in the browser.
+
+name: trendsentinel-frontend
+
+services:
+  frontend:
+    build:
+      context: .
+      args:
+        # A BUILD arg: Vite bakes it into the bundle. Changing it needs a rebuild, not a
+        # restart. Defaults to the API's published host port.
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:8000}
+    ports:
+      - "${FRONTEND_PORT:-5180}:3000"
+    restart: unless-stopped

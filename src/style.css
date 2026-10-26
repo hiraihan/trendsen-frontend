@@ -1,0 +1,478 @@
+/* Global styles: tokens, base, and the small shared vocabulary every surface uses
+   (page container, buttons, controls, chips, tables, skeletons). One-off component
+   styling still lives in each SFC's scoped block. */
+
+/* ---------------------------------------------------------------- tokens --- */
+
+:root {
+  color-scheme: light dark;
+
+  /* Surfaces, warmest to the canvas and cooling as they rise. */
+  --bg: #f7f7f5;
+  --surface: #ffffff;
+  --surface-2: #f3f3f0;
+  --surface-3: #eaeae6;
+  --border: #e4e4df;
+  --border-strong: #d2d2cb;
+
+  --text: #1b1b1d;
+  --text-muted: #6b6b71;
+  --text-faint: #8d8d94;
+
+  /* The single accent: primary actions, current selection, live state. */
+  --accent: #1f5fd0;
+  --accent-hover: #174ba8;
+  --accent-soft: #e9effc;
+  --accent-contrast: #ffffff;
+
+  /* Semantic states, each with a soft fill for chips and banners. */
+  --danger: #b42318;
+  --danger-soft: #fcebe9;
+  --success: #106b47;
+  --success-soft: #e4f3ec;
+  --warn: #8a5800;
+  --warn-soft: #fdf2dc;
+
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 14px;
+
+  /* Elevation is declared once: small lift for panels, none for text rows. */
+  --shadow-1:
+    0 1px 2px rgb(23 23 26 / 0.05), 0 4px 14px -8px rgb(23 23 26 / 0.18);
+  --shadow-2:
+    0 2px 6px rgb(23 23 26 / 0.07), 0 16px 40px -16px rgb(23 23 26 / 0.3);
+
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-mono:
+    ui-monospace, "SF Mono", "Cascadia Code", Consolas, "Liberation Mono",
+    monospace;
+
+  --page-max: 68rem;
+  --page-pad: clamp(1rem, 3vw, 1.5rem);
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --speed: 160ms;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #131316;
+    --surface: #1b1b1f;
+    --surface-2: #232328;
+    --surface-3: #2b2b31;
+    --border: #2a2a31;
+    --border-strong: #3d3d45;
+
+    --text: #f1f1f3;
+    --text-muted: #a4a4ac;
+    --text-faint: #7e7e87;
+
+    --accent: #7ab0ff;
+    --accent-hover: #a4c8ff;
+    --accent-soft: #1d2b47;
+    --accent-contrast: #0d203e;
+
+    --danger: #ff9187;
+    --danger-soft: #3a201d;
+    --success: #66d9a8;
+    --success-soft: #15302a;
+    --warn: #f0c062;
+    --warn-soft: #38300f;
+
+    --shadow-1: 0 1px 2px rgb(0 0 0 / 0.4), 0 4px 14px -8px rgb(0 0 0 / 0.5);
+    --shadow-2: 0 2px 8px rgb(0 0 0 / 0.45), 0 18px 44px -18px rgb(0 0 0 / 0.6);
+  }
+}
+
+/* ------------------------------------------------------------------ base --- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+* {
+  scrollbar-width: thin;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2 {
+  margin: 0;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: 1.75rem;
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: 1.125rem;
+  line-height: 1.3;
+}
+
+pre,
+code,
+kbd {
+  font-family: var(--font-mono);
+}
+
+code {
+  font-size: 0.9em;
+}
+
+a {
+  color: var(--accent);
+  text-decoration-skip-ink: auto;
+  text-underline-offset: 2px;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 24%, transparent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+/* ------------------------------------------------------------ primitives --- */
+
+/* The one container every surface shares, so nav and content align. */
+.page {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: 1.25rem var(--page-pad) 3rem;
+}
+
+.view-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.view-sub {
+  margin: 0.25rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+/* Buttons: one shape, three intents. Disabled and loading are part of the deal. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 2.25rem;
+  padding: 0 0.875rem;
+  border: 1px solid transparent;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--speed) var(--ease-out),
+    border-color var(--speed) var(--ease-out),
+    color var(--speed) var(--ease-out),
+    box-shadow var(--speed) var(--ease-out);
+}
+
+.btn--primary {
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+.btn--primary:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.btn--primary:disabled {
+  background: color-mix(in srgb, var(--accent) 55%, var(--surface-3));
+  color: color-mix(in srgb, var(--accent-contrast) 82%, transparent);
+}
+
+.btn--ghost {
+  border-color: var(--border-strong);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+}
+
+.btn--ghost:hover:not(:disabled) {
+  background: var(--surface-2);
+  border-color: var(--border-strong);
+}
+
+.btn--ghost:disabled {
+  color: var(--text-faint);
+  border-color: var(--border);
+  box-shadow: none;
+}
+
+.btn--sm {
+  min-height: 1.875rem;
+  padding: 0 0.625rem;
+  font-size: 0.8125rem;
+}
+
+/* Form controls share one height, border and focus treatment. */
+input,
+select,
+textarea {
+  font: inherit;
+  font-size: 0.9375rem;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-sm);
+  caret-color: var(--accent);
+  transition:
+    border-color var(--speed) var(--ease-out),
+    box-shadow var(--speed) var(--ease-out),
+    background-color var(--speed) var(--ease-out);
+}
+
+input:not([type="checkbox"]):not([type="radio"]),
+select,
+textarea {
+  min-height: 2.25rem;
+  padding: 0.25rem 0.625rem;
+  width: 100%;
+}
+
+input::placeholder {
+  color: var(--text-faint);
+}
+
+input:hover:not(:disabled),
+select:hover:not(:disabled) {
+  border-color: var(--text-faint);
+}
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow:
+    0 0 0 1px var(--accent),
+    0 0 0 4px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+input:disabled,
+select:disabled {
+  background: var(--surface-2);
+  color: var(--text-faint);
+  cursor: not-allowed;
+}
+
+/* Labels sit above their control, always, at the same size. */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.field__label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* Panels group one idea; they never nest. */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 1rem;
+}
+
+/* Status chips: the one way state is named across items, sources and runs. */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.05rem 0.55rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+
+.chip--accent {
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+  color: var(--accent);
+}
+
+.chip--success {
+  background: var(--success-soft);
+  border-color: color-mix(in srgb, var(--success) 32%, transparent);
+  color: var(--success);
+}
+
+.chip--danger {
+  background: var(--danger-soft);
+  border-color: color-mix(in srgb, var(--danger) 32%, transparent);
+  color: var(--danger);
+}
+
+.chip--warn {
+  background: var(--warn-soft);
+  border-color: color-mix(in srgb, var(--warn) 32%, transparent);
+  color: var(--warn);
+}
+
+/* A dot marks the states that move: running, queued. */
+.chip--dot::before {
+  content: "";
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: currentColor;
+  flex: none;
+}
+
+/* Tables: dense data with quiet rules and tabular numerals. */
+.table-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.875rem;
+}
+
+th {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  white-space: nowrap;
+}
+
+td {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+tbody tr {
+  transition: background-color var(--speed) var(--ease-out);
+}
+
+tbody tr:hover {
+  background: var(--surface-2);
+}
+
+/* Printing layers for data in flight. */
+.skeleton {
+  border-radius: var(--r-sm);
+  background: linear-gradient(
+    90deg,
+    var(--surface-2) 25%,
+    var(--surface-3) 45%,
+    var(--surface-2) 65%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.4s ease-in-out infinite;
+}
+
+.skeleton--text {
+  height: 0.875rem;
+}
+
+@keyframes skeleton-shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -60% 0;
+  }
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+}
+
+/* Live regions and skip targets: reachable by assistive tech, invisible on screen. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

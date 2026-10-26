@@ -1,0 +1,10 @@
+node_modules
+dist
+e2e/test-results
+e2e/playwright-report
+coverage
+# A local `.env` is for the dev server; the image gets its API URL as a build arg instead.
+# Copying it in would let a stray value override the arg at build time.
+.env
+.env.*
+!.env.example
